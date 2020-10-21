@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1035</width>
+    <height>666</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget"/>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1035</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuFile">
+    <property name="title">
+     <string>File</string>
+    </property>
+    <addaction name="actionFile_New"/>
+    <addaction name="actionFile_Open"/>
+    <addaction name="actionFile_Save"/>
+    <addaction name="actionFile_Save_As"/>
+    <addaction name="separator"/>
+    <addaction name="actionFile_Exit"/>
+   </widget>
+   <widget class="QMenu" name="menuEdit">
+    <property name="title">
+     <string>Edit</string>
+    </property>
+    <addaction name="actionEdit_Start_Line"/>
+    <addaction name="actionEdit_End_Line"/>
+    <addaction name="separator"/>
+    <addaction name="actionEdit_Put_Start"/>
+    <addaction name="separator"/>
+    <addaction name="actionEdit_Clear_Lines"/>
+   </widget>
+   <widget class="QMenu" name="menuSettings">
+    <property name="title">
+     <string>Tools</string>
+    </property>
+    <addaction name="actionTools_Settings"/>
+    <addaction name="separator"/>
+    <addaction name="actionTools_Save_Brain"/>
+    <addaction name="actionTools_Load_Brain"/>
+    <addaction name="separator"/>
+   </widget>
+   <widget class="QMenu" name="menuRun">
+    <property name="title">
+     <string>Run</string>
+    </property>
+    <addaction name="actionRun_Run_ML"/>
+    <addaction name="separator"/>
+    <addaction name="actionRun_Neuro_Car"/>
+    <addaction name="separator"/>
+    <addaction name="actionRun_Manual"/>
+    <addaction name="actionContinue_ML_based_on_first_car"/>
+    <addaction name="separator"/>
+    <addaction name="actionRun_Competition"/>
+   </widget>
+   <widget class="QMenu" name="menuHelp">
+    <property name="title">
+     <string>Help</string>
+    </property>
+    <addaction name="actionHelp_About"/>
+   </widget>
+   <widget class="QMenu" name="menuView">
+    <property name="title">
+     <string>View</string>
+    </property>
+    <addaction name="actionView_Switch_Perspective"/>
+    <addaction name="actionView_Reset_View_Point"/>
+    <addaction name="actionView_Camera_on_Car"/>
+    <addaction name="separator"/>
+    <addaction name="actionView_Hile_Lines"/>
+   </widget>
+   <addaction name="menuFile"/>
+   <addaction name="menuEdit"/>
+   <addaction name="menuView"/>
+   <addaction name="menuSettings"/>
+   <addaction name="menuRun"/>
+   <addaction name="menuHelp"/>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionFile_New">
+   <property name="text">
+    <string>New</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+N</string>
+   </property>
+  </action>
+  <action name="actionFile_Open">
+   <property name="text">
+    <string>Open...</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+O</string>
+   </property>
+  </action>
+  <action name="actionFile_Save">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Save</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+S</string>
+   </property>
+  </action>
+  <action name="actionFile_Save_As">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Save As...</string>
+   </property>
+  </action>
+  <action name="actionFile_Exit">
+   <property name="text">
+    <string>Exit</string>
+   </property>
+  </action>
+  <action name="actionEdit_Start_Line">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Start Line</string>
+   </property>
+   <property name="shortcut">
+    <string>L</string>
+   </property>
+  </action>
+  <action name="actionEdit_End_Line">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>End Line</string>
+   </property>
+   <property name="shortcut">
+    <string>E</string>
+   </property>
+  </action>
+  <action name="actionEdit_Put_Start">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Put Start</string>
+   </property>
+   <property name="shortcut">
+    <string>P</string>
+   </property>
+  </action>
+  <action name="actionTools_Settings">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Settings</string>
+   </property>
+  </action>
+  <action name="actionRun_Run_ML">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Run ML</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+L</string>
+   </property>
+  </action>
+  <action name="actionRun_Neuro_Car">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Run Neuro Car</string>
+   </property>
+   <property name="shortcut">
+    <string>N</string>
+   </property>
+  </action>
+  <action name="actionRun_Manual">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Run Manual</string>
+   </property>
+   <property name="shortcut">
+    <string>M</string>
+   </property>
+  </action>
+  <action name="actionHelp_About">
+   <property name="text">
+    <string>About...</string>
+   </property>
+  </action>
+  <action name="actionView_Switch_Perspective">
+   <property name="text">
+    <string>Switch Perspective</string>
+   </property>
+   <property name="shortcut">
+    <string>Alt+P</string>
+   </property>
+  </action>
+  <action name="actionView_Reset_View_Point">
+   <property name="text">
+    <string>Reset View Point</string>
+   </property>
+   <property name="shortcut">
+    <string>Alt+R</string>
+   </property>
+  </action>
+  <action name="actionView_Camera_on_Car">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Camera on Car</string>
+   </property>
+   <property name="shortcut">
+    <string>C</string>
+   </property>
+  </action>
+  <action name="actionContinue_ML_based_on_first_car">
+   <property name="text">
+    <string>Continue ML based on first car</string>
+   </property>
+   <property name="shortcut">
+    <string>Alt+L</string>
+   </property>
+  </action>
+  <action name="actionTools_Save_Brain">
+   <property name="text">
+    <string>Save Brain...</string>
+   </property>
+  </action>
+  <action name="actionTools_Load_Brain">
+   <property name="text">
+    <string>Load Brain...</string>
+   </property>
+  </action>
+  <action name="actionTools_Export_Statistics">
+   <property name="text">
+    <string>Export Statistics</string>
+   </property>
+  </action>
+  <action name="actionRun_Competition">
+   <property name="text">
+    <string>Competition</string>
+   </property>
+   <property name="shortcut">
+    <string>Alt+C</string>
+   </property>
+  </action>
+  <action name="actionEdit_Clear_Lines">
+   <property name="text">
+    <string>Clear Lines</string>
+   </property>
+  </action>
+  <action name="actionView_Hile_Lines">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Hile Lines</string>
+   </property>
+   <property name="shortcut">
+    <string>H</string>
+   </property>
+  </action>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
