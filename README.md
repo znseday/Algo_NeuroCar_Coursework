@@ -8,4 +8,4 @@
 
 #### Цыникин Сергей
 
-Описание будет позже
+Краткое описание проекта [Doc/Algo_NeuroCar_Coursework.pdf](https://github.com/znseday/Algo_NeuroCar_Coursework/blob/main/Doc/Algo_NeuroCar_Coursework.pdf)
