@@ -143,9 +143,9 @@ void MainGLWidget::mousePressEvent(QMouseEvent *pe)
 
 void MainGLWidget::mouseMoveEvent(QMouseEvent *pe)
 {
-    if (pe->x() < 0 || pe->x() >= width())
+    if (pe->position().x() < 0 || pe->position().x() >= width())
         return;
-    if (pe->y() < 0 || pe->y() >= height())
+    if (pe->position().y() < 0 || pe->position().y() >= height())
         return;
 
 //    auto tStart = ClockType::now();
@@ -154,7 +154,7 @@ void MainGLWidget::mouseMoveEvent(QMouseEvent *pe)
             || WorkMode == WorkModeType::EditStart)
     {
 
-        wExists = MouseToWorld_v3(pe->x(), pe->y(), wx, wy, wz);
+        wExists = MouseToWorld_v3(pe->position().x(), pe->position().y(), wx, wy, wz);
     //    wExists = Model.MouseToWorld(pe->x(), pe->y(), this->height(), wx, wy, wz);
     //    auto tEnd = ClockType::now();
     //    auto t = (double)std::chrono::duration_cast<std::chrono::nanoseconds>(tEnd - tStart).count();

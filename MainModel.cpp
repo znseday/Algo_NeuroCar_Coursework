@@ -9,6 +9,7 @@
 
 #include <QVector3D>
 #include <QJsonArray>
+#include <QFile>
 
 constexpr float RotSpeed = 0.12f;
 constexpr float TransSpeed = 0.0025f;
@@ -238,8 +239,8 @@ void MainModel::OnKeyRelease(QKeyEvent *pe)
 
 void MainModel::OnMousePress(QMouseEvent *pe, bool wExists, double wx, double wy)
 {
-    OldX = pe->x();
-    OldY = pe->y();
+    OldX = pe->position().x();
+    OldY = pe->position().y();
 
     if (pe->button() == Qt::LeftButton)
     {
@@ -286,8 +287,8 @@ void MainModel::OnMouseMove(QMouseEvent *pe, bool wExists, double wx, double wy)
     }
     if (pe->buttons() & Qt::RightButton)
     {
-        CurrentX = pe->x();
-        CurrentY = pe->y();
+        CurrentX = pe->position().x();
+        CurrentY = pe->position().y();
 
         int dx = CurrentX - OldX;
         int dy = CurrentY - OldY;

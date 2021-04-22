@@ -8,7 +8,7 @@
 
 std::mt19937 NeuroNet::gen;
 
-void NeuroNet::InitRandGenByTime()
+/*static*/ void NeuroNet::InitRandGenByTime()
 {
     gen.seed(time(nullptr));
 }
@@ -52,7 +52,7 @@ void NeuroNet::InitTopology(const std::vector<size_t> _topology,
             }
         }
     }
-    GeneCount += _topology.size()-1; // for biases
+
     qDebug() << __PRETTY_FUNCTION__;
     qDebug() << "GeneCount =" << GeneCount;
 }
@@ -90,69 +90,34 @@ double NeuroNet::GetOutput(size_t _ind) const
 }
 //-------------------------------------------------------------
 
-void NeuroNet::MutateOneRandomGene(double _weightPercent, double _maxWeightChange, double _maxBiasChange)
+void NeuroNet::MutateOneRandomGene(double _weightPercent, double _maxWeightChange, double _maxDeltaBias)
 {
     size_t geneInd = rand()%GeneCount;
     for (auto & layer : Layers)
     {
         if (geneInd < layer.Neurons.size())
         {
-            layer.Neurons.at(geneInd).Mutate(_weightPercent, _maxWeightChange);
-            return;
-        }
-        else if (geneInd == layer.Neurons.size()) // bias
-        {
-            layer.MutateBias(_maxBiasChange);
+            layer.Neurons.at(geneInd).Mutate(_weightPercent, _maxWeightChange, _maxDeltaBias);
             return;
         }
         else
         {
-            geneInd -= (layer.Neurons.size()+1); // +1 for bias
+            geneInd -= layer.Neurons.size();
         }
     }
 }
 //-------------------------------------------------------------
 
-void NeuroNet::MutateWholeNet(double _netPercent, double _amountWeightProb, double _maxWeightChange, double _maxBiasChange)
+void NeuroNet::MutateWholeNet(double _netPercent, double _amountWeightProb, double _maxWeightChange, double _maxDeltaBias)
 {
     for (size_t i = 0; i < Layers.size()-1; ++i)
     {
         for (auto & neuron : Layers[i].Neurons)
             if (rand()/double(RAND_MAX) < _netPercent)
-                neuron.Mutate(_amountWeightProb, _maxWeightChange);
-
-        if (rand()/double(RAND_MAX) < _netPercent)
-            Layers[i].MutateBias(_maxBiasChange);
+                neuron.Mutate(_amountWeightProb, _maxWeightChange, _maxDeltaBias);
     }
 }
 //-------------------------------------------------------------
-
-std::string ActivationFuncAsText(const ActivationFunc_t &_func)
-{
-    qDebug() << "sizeof(_func)" << sizeof(_func);
-
-    auto ptr = _func.target<double(*)(double)>();
-    if (ptr && *ptr == MySigmoidFunc)
-        return "MySigmoidFunc";
-    else if (ptr && *ptr == tanh)
-        return "tanh";
-    else if (ptr && *ptr == MyReLU)
-        return "MyReLU";
-    else
-        return "UNKNOWN";
-}
-
-ActivationFunc_t GetActivationFuncByText(const std::string &_funcName)
-{
-    if (_funcName == "MySigmoidFunc")
-        return MySigmoidFunc;
-    else if (_funcName == "tanh")
-        return tanh;
-    else if (_funcName == "MyReLU")
-        return MyReLU;
-    else
-        return nullptr; // std::function<double(double)>();
-}
 
 void NeuroNet::PrintMeAsDebugText() const
 {
@@ -165,7 +130,6 @@ void NeuroNet::PrintMeAsDebugText() const
     for (size_t i = 0; i < Layers.size(); ++i)
     {
         qDebug() << "Layer" << i << ".Neurons.size() ="<< Layers[i].Neurons.size();
-        qDebug() << "Layer" << i << ".Bias ="<< Layers[i].Bias;
         for (size_t j = 0; j < Layers[i].Neurons.size(); ++j)
         {
             qDebug() << "neuron" << j << "." << Layers[i].Neurons[j].GetValue();
@@ -229,7 +193,7 @@ bool NeuroNet::LoadFromFile(const QString &_fileName)
 }
 //-------------------------------------------------------------
 
-void NeuroNet::ParseJsonObject(const QJsonObject _jsonObject)
+void NeuroNet::ParseJsonObject(const QJsonObject &_jsonObject)
 {
     BrainSettings.LoadFromJsonObject(_jsonObject["BrainSettings"].toObject());
     InitTopology(BrainSettings.Topology, BrainSettings.ActivationFuncGeneral, BrainSettings.ActivationFuncFinal, BrainSettings.IsXavier);
@@ -283,22 +247,52 @@ void NeuroNet::CreateByCrossover(const NeuroNet &_A, double rateAtoB, const Neur
 
     for (size_t i = 0; i < Layers.size(); ++i)
     {
-        if (distribution(gen) < rateAtoB)
-            Layers[i].Bias = _A.Layers[i].Bias;
-        else
-            Layers[i].Bias = _B.Layers[i].Bias;
-
         for (size_t j = 0; j < Layers[i].Neurons.size(); ++j)
         {
             for (size_t k = 0; k < Layers[i].Neurons[j].WeightsAccess().size(); ++k)
             {
                 if (distribution(gen) < rateAtoB)
-                    Layers[i].Neurons[j].WeightsAccess()[k] = _A.Layers[i].Neurons[j].WeightsAccess()[k];
+                    Layers[i].Neurons[j].WeightsAccess()[k] = _A.Layers[i].Neurons[j].GetWeights()[k];
                 else
-                    Layers[i].Neurons[j].WeightsAccess()[k] = _B.Layers[i].Neurons[j].WeightsAccess()[k];
+                    Layers[i].Neurons[j].WeightsAccess()[k] = _B.Layers[i].Neurons[j].GetWeights()[k];
             }
+
+            if (distribution(gen) < rateAtoB)
+                Layers[i].Neurons[j].SetInputBias( _A.Layers[i].Neurons[j].GetInputBias() );
+            else
+                Layers[i].Neurons[j].SetInputBias( _B.Layers[i].Neurons[j].GetInputBias() );
         }
     }
 }
 //-------------------------------------------------------------
+
+std::string ActivationFuncAsText(const ActivationFunc_t &_func)
+{
+    qDebug() << "sizeof(_func)" << sizeof(_func);
+
+    auto ptr = _func.target<double(*)(double)>();
+    if (ptr && *ptr == MySigmoidFunc)
+        return "MySigmoidFunc";
+    else if (ptr && *ptr == tanh)
+        return "tanh";
+    else if (ptr && *ptr == MyReLU)
+        return "MyReLU";
+    else
+        return "UNKNOWN";
+}
+//-------------------------------------------------------------
+
+ActivationFunc_t GetActivationFuncByText(const std::string &_funcName)
+{
+    if (_funcName == "MySigmoidFunc")
+        return MySigmoidFunc;
+    else if (_funcName == "tanh")
+        return tanh;
+    else if (_funcName == "MyReLU")
+        return MyReLU;
+    else
+        return nullptr; // std::function<double(double)>();
+}
+//-------------------------------------------------------------
+
 

@@ -60,7 +60,7 @@ QString Detector::DoublesToString(const std::vector<double> &_vals)
     QString res;
     for (size_t i = 0; i < _vals.size(); ++i)
     {
-        res += _vals[i];
+        res += QString().setNum(_vals[i]);
         if (i < _vals.size() - 1)
             res += "|";
     }
@@ -574,14 +574,13 @@ void Car::GoNeuro(double dt)
 
     if (/*MinMAVelocity > 0 &&*/ MAVelocity >= 0 && MAVelocity < MinMAVelocity)
     {
-        //qDebug() << "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!";
-        //qDebug() << "too slow, MAVelocity =" << MAVelocity;
+        //qDebug() << "!!! too slow, MAVelocity =" << MAVelocity;
         IsAlive = false;
     }
 
     if (/*MaxLifeTime > 0 &&*/ tInternal >= MaxLifeTime)
     {
-        //qDebug() << "!!!!!! too long, tInternal =" << tInternal;
+        //qDebug() << "!!! too long, tInternal =" << tInternal;
         IsAlive = false;
     }
 }
@@ -599,7 +598,7 @@ void Car::CalcIntersects(const std::vector<std::vector<QLineF> > &_lines, bool _
         {
             for (const auto & l : line)
             {
-                if (d.Line.intersect(l, &interPoint) == QLineF::BoundedIntersection)
+                if (d.Line.intersects(l, &interPoint) == QLineF::BoundedIntersection)
                 {
                     double len = QLineF(d.Line.p1(), interPoint).length();
                     interPoints.emplace_back(interPoint, len);
@@ -634,7 +633,7 @@ void Car::CalcIntersects(const std::vector<std::vector<QLineF> > &_lines, bool _
         {
             if ( std::any_of(line.begin(), line.end(), [cl]
                                                 (const QLineF &l)
-                                                { return cl.intersect(l, nullptr) == QLineF::BoundedIntersection; }) )
+                                                { return cl.intersects(l, nullptr) == QLineF::BoundedIntersection; }) )
             {
                 IsAlive = false;
             }

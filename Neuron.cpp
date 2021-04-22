@@ -21,24 +21,16 @@ double MyReLU(double x)
 
 std::mt19937 Neuron::gen;
 
-void Neuron::InitRandGenByTime()
+/*static*/ void Neuron::InitRandGenByTime()
 {
     gen.seed(time(nullptr));
 }
 //-------------------------------------------------------------
 //-------------------------------------------------------------
 
-void LayerStruct::MutateBias(double _maxDegree)
-{
-    double r = -_maxDegree + rand()/double(RAND_MAX)*2.0*_maxDegree;
-    Bias += r;
-}
-//-------------------------------------------------------------
-
 QJsonObject LayerStruct::RepresentAsJsonObject() const
 {
     QJsonObject resultObject;
-    resultObject.insert("Bias", Bias);
     resultObject.insert("Neurons.size", (int)Neurons.size());
 
     QJsonArray neuronsArray;
@@ -55,8 +47,6 @@ QJsonObject LayerStruct::RepresentAsJsonObject() const
 
 void LayerStruct::LoadFromJsonObject(const QJsonObject &_jsonObject)
 {
-    Bias = _jsonObject["Bias"].toDouble(0);
-
     if ((int)Neurons.size() != _jsonObject["Neurons.size"].toInt(0))
         throw std::runtime_error("(int)Neurons.size() != _jsonObject[\"Neurons.size\"].toInt(0) in LayerStruct::LoadFromJsonObject");
 
@@ -68,7 +58,6 @@ void LayerStruct::LoadFromJsonObject(const QJsonObject &_jsonObject)
     }
     if (Neurons.size() != i)
         throw std::runtime_error("Neurons.size() != i in LayerStruct::LoadFromJsonObject");
-
 }
 //-------------------------------------------------------------
 //-------------------------------------------------------------
@@ -108,16 +97,28 @@ void Neuron::InitRandomWeights(size_t _fan_in, size_t _fan_out, bool _isXavier)
 }
 //-------------------------------------------------------------
 
-void Neuron::Mutate(double _weightPercent, double _maxWeightChange)
+void Neuron::Mutate(double _weightPercent, double _maxWeightChange, double _maxDeltaBias)
 {
     //qDebug() << __PRETTY_FUNCTION__;
     std::uniform_real_distribution<> distribution(-_maxWeightChange, _maxWeightChange);
     for (auto & w : Weights)
+    {
         if (rand()/double(RAND_MAX) < _weightPercent)
         {
             w += distribution(gen);
         }
+    }
+
+    double r = -_maxDeltaBias + rand()/double(RAND_MAX)*2.0*_maxDeltaBias;
+    InputBias += r;
 }
+//-------------------------------------------------------------
+
+//void Neuron::MutateInputBias(double _maxDeltaBias)
+//{
+//    double r = -_maxDegree + rand()/double(RAND_MAX)*2.0*_maxDegree;
+//    InputBias += r;
+//}
 //-------------------------------------------------------------
 
 void Neuron::Feed(const LayerStruct &_prevLayer, const ActivationFunc_t &_activationFunc)
@@ -126,7 +127,7 @@ void Neuron::Feed(const LayerStruct &_prevLayer, const ActivationFunc_t &_activa
     for (const auto & neuron : _prevLayer.Neurons)
         sum += neuron.GetValue() * neuron.Weights[Index];
 
-    Value = _activationFunc(sum + _prevLayer.Bias);
+    Value = _activationFunc(sum + InputBias);
 }
 //-------------------------------------------------------------
 
@@ -136,6 +137,7 @@ void Neuron::PrintMeAsDebugText() const
     {
         qDebug() << "w =" << w;
     }
+    qDebug() << "InputBias =" << InputBias;
 }
 //-------------------------------------------------------------
 
@@ -151,6 +153,8 @@ QJsonObject Neuron::RepresentAsJsonObject() const
     }
 
     resultObject.insert("Weights", weightsArray);
+
+    resultObject.insert("InputBias", InputBias);
 
     return resultObject;
 }
@@ -169,5 +173,9 @@ void Neuron::LoadFromJsonObject(const QJsonObject &_jsonObject)
     }
     if (Weights.size() != i)
         throw std::runtime_error("Weights.size() != i in Neuron::LoadFromJsonObject");
+
+    InputBias = _jsonObject["InputBias"].toDouble(0);
+
+    qDebug() << "InputBias = " << InputBias;
 }
 //-------------------------------------------------------------

@@ -49,6 +49,10 @@ protected:
 
     void wheelEvent(QWheelEvent *pe) override;
 
+    bool MouseToWorld_v3(int clientX, int clientY,
+                                 GLdouble &_worldX, GLdouble &_worldY, GLdouble &_worldZ);
+
+
 public:
     MainGLWidget() = delete;
     MainGLWidget(WorkModeType &_workMode, MainModel &_model, QWidget *parent = nullptr);
@@ -59,8 +63,8 @@ public:
     void StartMainTimer();
     void StopMainTimer();
 
-    bool MouseToWorld_v3(int clientX, int clientY,
-                                 GLdouble &_worldX, GLdouble &_worldY, GLdouble &_worldZ);
+//    bool MouseToWorld_v3(int clientX, int clientY,
+//                                 GLdouble &_worldX, GLdouble &_worldY, GLdouble &_worldZ);
 
 public slots:
 

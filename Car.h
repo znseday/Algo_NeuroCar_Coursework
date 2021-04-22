@@ -32,6 +32,7 @@ struct Detector
     static std::vector<double> ParseStringToDoubles(QString _str);
     static QString DoublesToString(const std::vector<double> &_vals);
 };
+//-------------------------------------------------------------
 
 class Car : public IDrawableIn3D
 {
@@ -82,7 +83,7 @@ public:
     Car();
 
     NeuroNet & BrainAccess() {return Brain;} // Стоит ли делать подобные методы или просто делать Brain в public?
-    const NeuroNet & BrainAccess() const {return Brain;}
+    const NeuroNet & GetBrain() const {return Brain;}
 
     QString GetDetectorsLengths() const;
     QString GetDetectorsAngles() const;
@@ -135,7 +136,6 @@ public:
     bool GetIsCurBest() const {return IsCurBest;}
 
     size_t GetDetectorsCount() const {return Detectors.size();}
-
 };
 
 #endif // CAR_H

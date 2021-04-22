@@ -25,8 +25,7 @@ struct BrainSettingsType
                 IsXavier != ob.IsXavier);
     }
 };
-
-
+//-------------------------------------------------------------
 
 class NeuroNet
 {
@@ -37,7 +36,7 @@ private:
 
     BrainSettingsType BrainSettings;
 
-    void ParseJsonObject(const QJsonObject _jsonObject);
+    void ParseJsonObject(const QJsonObject &_jsonObject);
 
     static std::mt19937 gen;
 
@@ -60,8 +59,8 @@ public:
     void CalcAll();
     double GetOutput(size_t _ind) const;
 
-    void MutateOneRandomGene(double _weightPercent, double _maxWeightChange, double _maxBiasChange);
-    void MutateWholeNet(double _netPercent, double _amountWeightProb, double _maxWeightChange, double _maxBiasChange);
+    void MutateOneRandomGene(double _weightPercent, double _maxWeightChange, double _maxDeltaBias);
+    void MutateWholeNet(double _netPercent, double _amountWeightProb, double _maxWeightChange, double _maxDeltaBias);
 
     void PrintMeAsDebugText() const;
 

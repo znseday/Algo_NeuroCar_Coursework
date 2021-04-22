@@ -18,9 +18,9 @@ class Neuron;
 struct LayerStruct
 {
     std::vector<Neuron> Neurons;
-    double Bias = 0;
+//    std::vector<double> Biases;
+
     ActivationFunc_t ActivationFunc = nullptr;
-    void MutateBias(double _maxDegree);
     QJsonObject RepresentAsJsonObject() const;
     void LoadFromJsonObject(const QJsonObject &_jsonObject);
 };
@@ -32,6 +32,7 @@ private:
     size_t Index;
     double Value;
     std::vector<double> Weights;
+    double InputBias = 0;
 
     static std::mt19937 gen;
 
@@ -40,7 +41,7 @@ public:
     static void InitRandGenByTime();
 
     auto & WeightsAccess() {return Weights;}
-    const auto & WeightsAccess() const {return Weights;}
+    const auto & GetWeights() const {return Weights;}
 
     Neuron() = delete;
     Neuron(size_t _index, size_t _outputCount);
@@ -50,7 +51,8 @@ public:
 
     void InitRandomWeights(size_t _fan_in, size_t _fan_out, bool _isXavier);
 
-    void Mutate(double _weightPercent, double _maxWeightChange);
+    void Mutate(double _weightPercent, double _maxWeightChange, double _maxDeltaBias);
+//    void MutateInputBias(double _maxDegree);
 
     void Feed(const LayerStruct &_prevLayer, const ActivationFunc_t &_activationFunc);
 
@@ -58,6 +60,9 @@ public:
 
     QJsonObject RepresentAsJsonObject() const;
     void LoadFromJsonObject(const QJsonObject &_jsonObject);
+
+    void SetInputBias(double _inputBias) {InputBias = _inputBias;}
+    double GetInputBias() const {return InputBias;}
 };
 //-------------------------------------------------------------
 

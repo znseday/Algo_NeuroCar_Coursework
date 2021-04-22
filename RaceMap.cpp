@@ -313,11 +313,11 @@ void RaceMap::MutateAllButFirst()
                                              0.003 + rate*MutationCoeff, // max change for weight
                                              0.001 + rate*MutationCoeff);// max change for bias;
 
-        if ( true && i%(int(1.0/p)) == 0 )
+        if ( /*true &&*/ i%(int(1.0/p)) == 0 )
             Cars[i].BrainAccess().MutateWholeNet(0.2,  // brain percent
                                                  0.8,  // weights percent
                                                  0.2,  // max change for weight
-                                                 0.2);// max change for bias;
+                                                 0.2); // max change for bias;
     }
 }
 //-------------------------------------------------------------
@@ -654,7 +654,7 @@ bool RaceMap::LoadBrainFromFile(const QString &_fileName)
 
 void RaceMap::SaveLastBestBrainToFile(const QString &_fileName)
 {
-    GetLastBestCar().BrainAccess().SaveToFile(_fileName);
+    GetLastBestCar().GetBrain().SaveToFile(_fileName);
 }
 //-------------------------------------------------------------
 
